@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Retail Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <nav class="navbar">
+            <div class="nav-logo">
+                <a href="#">GAME RETAIL</a>
+            </div>
+            <div class="nav-search">
+                <input type="text" placeholder="Buscar por título...">
+            </div>
+            <div class="nav-links">
+                <a href="#" data-plataforma="PC">PC</a>
+                <a href="#" data-plataforma="PlayStation 5">PlayStation</a>
+                <a href="#" data-plataforma="Xbox Series X">Xbox</a>
+                <a href="#" data-plataforma="Nintendo Switch">Nintendo</a>
+            </div>
+            <div class="nav-usuario">
+                <a href="#" id="login-link">Iniciar Sesión</a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="filtros-container">
+            <select name="ordenar">
+                <option value="">Ordenar por...</option>
+                <option value="precio-asc">Precio: Más bajo a más alto</option>
+                <option value="precio-desc">Precio: Más alto a más bajo</option>
+            </select>
+            <select name="genero">
+                <option value="">Género</option>
+            </select>
+            <select name="plataforma">
+                <option value="">Plataforma</option>
+            </select>
+        </section>
+
+        <div id="tienda-container"></div>
+    </main>
+
+    <div id="login-modal" class="modal-oculto">
+        <div class="modal-contenido">
+            <span class="cerrar-modal">&times;</span>
+            <h2>Inicia Sesión para Comprar</h2>
+            <form id="login-form">
+                <input type="text" id="username" placeholder="Usuario" required>
+                <input type="password" id="password" placeholder="Contraseña" required>
+                <button type="submit">Entrar</button>
+                <p id="login-error" class="error-mensaje"></p>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
