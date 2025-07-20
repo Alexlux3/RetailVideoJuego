@@ -28,7 +28,7 @@ const login = async (req, res) => {
         // Actualizar la fecha de último acceso
         await pool.query('UPDATE usuarios SET fecha_ultimo_acceso = NOW() WHERE id_usuario = $1', [user.id_usuario]);
 
-        res.json({ token, user: { id: user.id_usuario, nombre: user.nombre_completo, rol: user.rol } });
+        res.json({ token, user: { id: user.id_usuario, nombre: user.nombre_completo, username: user.nombre_usuario, rol: user.rol } });
 
     } catch (error) {
         res.status(500).json({ message: "Error en el servidor durante el login", error: error.message });
