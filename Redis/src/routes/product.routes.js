@@ -15,7 +15,7 @@ router.get('/', async (req, res) => {
     }
 });
 
-// NUEVA RUTA para obtener UN SOLO producto por su ID
+// Ruta para obtener UN SOLO producto por su ID
 router.get('/:id', async (req, res) => {
     try {
         const { id } = req.params;

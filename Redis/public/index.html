@@ -24,25 +24,32 @@
         </nav>
     </header>
 
-    <main>
-        <section class="filtros-container">
-            <select name="ordenar">
-                <option value="">Ordenar por...</option>
-                <option value="precio-asc">Precio: Más bajo a más alto</option>
-                <option value="precio-desc">Precio: Más alto a más bajo</option>
-            </select>
-            <select name="genero">
-                <option value="">Género</option>
-            </select>
-            <select name="plataforma">
-                <option value="">Plataforma</option>
-            </select>
-        </section>
-        
-        <div id="tienda-container"></div>
-        
-        <div id="paginacion-container"></div>
+    <main id="main-content">
+        <div id="tienda-view">
+            <section class="filtros-container">
+                <select name="ordenar"><option value="">Ordenar por...</option><option value="precio-asc">Precio: Más bajo a más alto</option><option value="precio-desc">Precio: Más alto a más bajo</option></select>
+                <select name="genero"><option value="">Género</option></select>
+                <select name="plataforma"><option value="">Plataforma</option></select>
+            </section>
+            <div id="tienda-container"></div>
+            <div id="paginacion-container"></div>
+        </div>
 
+        <div id="admin-panel-container" class="hidden">
+            <h2>Panel de Administración</h2>
+            <div class="admin-section">
+                <h3>Gestionar Usuarios</h3>
+                <div id="user-list-container">
+                    </div>
+            </div>
+            <div class="admin-section">
+                <h3>Registrar Compra a Proveedor</h3>
+                <form id="compra-form">
+                    <p>Funcionalidad de compras a proveedores en desarrollo.</p>
+                    <button type="submit" disabled>Registrar Compra</button>
+                </form>
+            </div>
+        </div>
     </main>
 
     <div id="login-modal" class="modal-oculto">
