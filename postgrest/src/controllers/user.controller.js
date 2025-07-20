@@ -60,18 +60,26 @@ const createUser = async (req, res) => {
     }
 };
 
-const deleteMyAccount = async (req, res) => {
-    // Esta función requiere un middleware de autenticación para obtener req.user.id
-    const userId = req.user.id; 
+const getAllUsers = async (req, res) => {
     try {
-        // Es un "soft delete", solo se desactiva
-        await pool.query('UPDATE usuarios SET activo = false WHERE id_usuario = $1', [userId]);
-        // También podrías desactivar el cliente si quisieras
-        // await pool.query('UPDATE clientes SET activo = false WHERE id_usuario = $1', [userId]);
-        res.status(200).json({ message: "Tu cuenta ha sido desactivada." });
+        const result = await pool.query(
+            'SELECT id_usuario, nombre_usuario, email, rol, nombre_completo FROM usuarios ORDER BY id_usuario ASC'
+        );
+        res.status(200).json(result.rows);
     } catch (error) {
-        res.status(500).json({ message: "Error al desactivar la cuenta", error: error.message });
+        res.status(500).json({ message: "Error al obtener los usuarios" });
     }
 };
 
-module.exports = { createUser, deleteMyAccount };
+const deleteUser = async (req, res) => {
+    try {
+        const { id } = req.params;
+        // Se recomienda hacer un "soft delete" (desactivar) en lugar de un borrado físico
+        await pool.query('UPDATE usuarios SET activo = false WHERE id_usuario = $1', [id]);
+        res.status(200).json({ message: `Usuario con ID ${id} desactivado.` });
+    } catch (error) {
+        res.status(500).json({ message: "Error al eliminar el usuario." });
+    }
+};
+
+module.exports = { createUser, getAllUsers, deleteUser };

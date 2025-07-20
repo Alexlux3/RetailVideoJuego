@@ -1,0 +1,5 @@
+# Configura el manejo automático de finales de línea para archivos de texto.
+* text=auto
+
+# Forzar el uso de LF para scripts de shell para que sean ejecutables en Linux/macOS.
+*.sh text eol=lf

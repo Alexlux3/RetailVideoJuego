@@ -20,7 +20,7 @@ const manualBackup = (req, res) => {
       // Registrar el backup fallido en la BD
       await pool.query(
         `INSERT INTO backups_registro (tipo_backup, base_datos, ruta_archivo, fecha_inicio, estado, mensaje_error, usuario_id)
-         VALUES ('completo', 'relacional', 'N/A', NOW(), 'fallido', $1, $2)`,
+         VALUES ('completo', 'ambas', 'N/A', NOW(), 'fallido', $1, $2)`,
         [errorMessage, userId]
       );
       return res.status(500).json({ message: 'Falló el backup manual', error: errorMessage });
@@ -29,7 +29,7 @@ const manualBackup = (req, res) => {
     // Registrar el backup exitoso en la BD
     await pool.query(
       `INSERT INTO backups_registro (tipo_backup, base_datos, ruta_archivo, fecha_inicio, fecha_fin, estado, usuario_id)
-       VALUES ('completo', 'relacional', $1, NOW(), NOW(), 'completado', $2)`,
+       VALUES ('completo', 'ambas', $1, NOW(), NOW(), 'completado', $2)`,
       [backupPath, userId]
     );
     console.log(data); // Muestra la salida del script (ej. "✅ Backup completado...")
