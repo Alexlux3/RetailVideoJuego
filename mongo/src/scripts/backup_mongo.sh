@@ -4,7 +4,7 @@
 # --- CONFIGURACIÓN ---
 DB_NAME="videojuegos_logs"
 # Crea una subcarpeta para los backups de Mongo
-BACKUP_DIR="/home/tu_usuario/backups_db/mongo" 
+BACKUP_DIR="C:\Users\Javier\ALMACENAJE\backup" 
 DATE=$(date +"%Y-%m-%d_%H%M%S")
 # mongodump guarda en un directorio, no en un solo archivo
 BACKUP_PATH="$BACKUP_DIR/$DB_NAME-$DATE"
