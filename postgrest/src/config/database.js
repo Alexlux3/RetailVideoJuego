@@ -1,9 +1,6 @@
 // Importa la clase Pool desde la librería pg
 const { Pool } = require('pg');
 
-// 💡 ¡Importante! En un proyecto real, nunca escribas contraseñas
-// directamente en el código. Usa variables de entorno (archivos .env).
-// Por ahora, lo haremos así para que sea más sencillo de seguir.
 
 const pool = new Pool({
   user: 'app_user',           // El usuario que creamos en PostgreSQL

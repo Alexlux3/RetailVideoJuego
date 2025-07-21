@@ -8,7 +8,7 @@ const productoRoutes = require('./src/routes/product.routes'); // Importa las ru
 const reportRoutes = require('./src/routes/report.routes');
 
 const app = express();
-const PORT = 3000; // Puerto donde corre Estudiante 2 (puede cambiar)
+const PORT = 5000; 
 
 app.use(express.json());
 
