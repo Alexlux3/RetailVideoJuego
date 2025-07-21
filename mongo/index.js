@@ -9,7 +9,11 @@ const reportRoutes = require('./src/routes/report.routes');
 const internalLogRoutes = require('./src/routes/internalLog.routes');
 
 const app = express();
+<<<<<<< HEAD
 const PORT = 5000; // Puerto donde corre Estudiante 2 (puede cambiar)
+=======
+const PORT = 5000; 
+>>>>>>> 54526e80f01f72358eb5f30c00ecb8ad53d106e7
 
 app.use(express.json());
 app.use('/internal/log', internalLogRoutes);

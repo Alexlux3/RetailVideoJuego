@@ -39,15 +39,39 @@
             <h2>Panel de Administración</h2>
             <div class="admin-section">
                 <h3>Gestionar Usuarios</h3>
-                <div id="user-list-container">
-                    </div>
+                <div id="user-list-container"></div>
             </div>
             <div class="admin-section">
                 <h3>Registrar Compra a Proveedor</h3>
                 <form id="compra-form">
-                    <p>Funcionalidad de compras a proveedores en desarrollo.</p>
-                    <button type="submit" disabled>Registrar Compra</button>
+                    <div class="form-group">
+                        <label for="compra-proveedor">1. Seleccione un Proveedor:</label>
+                        <select id="compra-proveedor" required>
+                            <option value="">Cargando proveedores...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>2. Seleccione un Producto de la lista:</label>
+                        <div id="product-list-for-purchase">
+                            </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="compra-producto-nombre">Producto Seleccionado:</label>
+                        <input type="text" id="compra-producto-nombre" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label for="compra-cantidad">3. Cantidad a Comprar:</label>
+                        <input type="number" id="compra-cantidad" value="1" min="1" required>
+                    </div>
+                    <button type="submit">Registrar Compra</button>
+                    <p id="compra-error" class="error-mensaje"></p>
                 </form>
+            </div>
+            <div class="admin-section">
+                <h3>Gestión de Backups</h3>
+                <p>Inicia un respaldo completo del sistema. Esta operación puede tardar.</p>
+                <button id="backup-manual-btn">Realizar Backup Ahora</button>
+                <p id="backup-mensaje"></p>
             </div>
         </div>
     </main>

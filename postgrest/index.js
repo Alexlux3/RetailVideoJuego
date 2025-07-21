@@ -18,6 +18,7 @@ const plataformaRoutes = require('./src/routes/plataforma.routes');
 const authRoutes = require('./src/routes/auth.routes');
 const userRoutes = require('./src/routes/user.routes');
 const proveedorRoutes = require('./src/routes/proveedor.routes.js');
+const purchaseRoutes = require('./src/routes/purchase.routes');
 
 
 // Se asocian las rutas con sus prefijos de API
@@ -29,7 +30,7 @@ app.use('/api/plataformas', plataformaRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/usuarios', userRoutes);
 app.use('/api/proveedores', proveedorRoutes);
-
+app.use('/api/compras', purchaseRoutes);
 
 // --- Iniciar el servidor ---
 // Se modifica para escuchar en '0.0.0.0', permitiendo conexiones externas
