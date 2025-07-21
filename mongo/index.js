@@ -6,12 +6,13 @@ const logRoutes = require('./src/routes/log.routes');
 const userRoutes = require('./src/routes/user.routes');
 const productoRoutes = require('./src/routes/product.routes'); // Importa las rutas de productos
 const reportRoutes = require('./src/routes/report.routes');
+const internalLogRoutes = require('./src/routes/internalLog.routes');
 
 const app = express();
 const PORT = 5000; // Puerto donde corre Estudiante 2 (puede cambiar)
 
 app.use(express.json());
-
+app.use('/internal/log', internalLogRoutes);
 app.use('/api/ventas', saleRoutes);
 app.use('/api/logs', logRoutes);
 app.use('/api/users', userRoutes);
