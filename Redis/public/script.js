@@ -183,6 +183,37 @@ document.addEventListener('DOMContentLoaded', () => {
             } else { throw new Error(resultado.message); }
         } catch (error) { compraErrorP.textContent = `Error: ${error.message}`; }
     });
+    backupBtn.addEventListener('click', async () => {
+        const sesion = JSON.parse(sessionStorage.getItem('sesion'));
+        if (!sesion || !sesion.token) {
+            return alert("Tu sesión ha expirado. Inicia sesión de nuevo.");
+        }
+        if (!confirm("¿Estás seguro de que quieres iniciar un backup completo?")) {
+            return;
+        }
+        backupMensaje.textContent = "Iniciando proceso de backup...";
+        backupBtn.disabled = true;
+        try {
+        // CORRECCIÓN: Usar la URL completa de la API
+            const response = await fetch(`http://${IP_ESTUDIANTE_1}:3000/api/admin/backup`, {
+                method: 'POST',
+                headers: { 'Authorization': `Bearer ${sesion.token}` }
+            });
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || 'Error en el servidor.');
+            }
+
+            backupMensaje.textContent = `Éxito: ${data.message}`;
+        } catch (error) {
+            backupMensaje.textContent = `Error: ${error.message}`;
+        } finally {
+            setTimeout(() => {
+                backupBtn.disabled = false;
+            }, 5000);
+        }
+    });
 
     // --- Lógica de la Tienda ---
     async function cargarDatosIniciales() {
