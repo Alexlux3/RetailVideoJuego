@@ -35,6 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let plataformasCargadas = [];
     let categoriasCargadas = [];
     let productoSeleccionadoParaCompra = null;
+    let productosDelProveedorActual = []; // <-- CAMBIO 1: Nueva variable para guardar la lista del proveedor
     const IP_ESTUDIANTE_1 = '100.91.20.100';
 
     // --- Lógica de Vistas ---
@@ -274,7 +275,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.target.id === 'backup-btn') {
             e.preventDefault();
             alert('(Simulación) Iniciando proceso de backup...');
-            // Aquí iría la llamada fetch al API para iniciar el backup real.
         }
     });
     proveedorSelect.addEventListener('change', async () => {
@@ -290,6 +290,7 @@ document.addEventListener('DOMContentLoaded', () => {
                  headers: { 'Authorization': `Bearer ${sesion.token}` }
             });
             const productosDelProveedor = await response.json();
+            productosDelProveedorActual = productosDelProveedor; // <-- CAMBIO 2: Guarda la lista del proveedor
             productosDelProveedor.forEach(producto => {
                 const item = document.createElement('div');
                 item.className = 'product-list-item';
@@ -306,13 +307,15 @@ document.addEventListener('DOMContentLoaded', () => {
             document.querySelectorAll('.product-list-item.selected').forEach(el => el.classList.remove('selected'));
             e.target.classList.add('selected');
             const idProducto = e.target.dataset.id;
-            productoSeleccionadoParaCompra = productosCargados.find(p => p.id_producto == idProducto);
+            // <-- CAMBIO 3: Busca en la lista correcta
+            productoSeleccionadoParaCompra = productosDelProveedorActual.find(p => p.id_producto == idProducto);
             if (productoSeleccionadoParaCompra) {
                 productoNombreInput.value = productoSeleccionadoParaCompra.titulo;
+                compraErrorP.textContent = ''; // Limpia el mensaje de error si la selección es válida
             }
         }
     });
-    //
+
     backupBtn.addEventListener('click', async () => {
         const sesion = JSON.parse(sessionStorage.getItem('sesion'));
         if (!sesion || !sesion.token) {
@@ -347,7 +350,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
     
-    //
     // --- Inicia todo ---
     cargarSesion();
     actualizarNavUsuario();
