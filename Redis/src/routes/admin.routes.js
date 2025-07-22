@@ -90,21 +90,19 @@ router.post('/compras', async (req, res) => {
 // =================================================================
 router.post('/backup', async (req, res) => {
     const authHeader = req.headers['authorization'];
-    console.log("✅ Intermediario: Petición de backup recibida. Reenviando a Máquina 1...");
-
     try {
-        // Asumimos que la ruta en la Máquina 1 será /api/backup
-        const response = await fetch(`http://${IP_ESTUDIANTE_1}:3000/api/backup`, {
+        // CORRECCIÓN: La ruta correcta en el backend del Estudiante 1 es /api/admin/backup
+        const response = await fetch(`http://${IP_ESTUDIANTE_1}:3000/api/admin/backup`, {
             method: 'POST',
             headers: { 'Authorization': authHeader }
         });
-
         const data = await response.json();
         res.status(response.status).json(data);
     } catch (error) {
-        console.error("❌ Intermediario: Error al contactar la Máquina 1 para el backup:", error);
         res.status(500).json({ message: "No se pudo conectar al servicio de backup." });
     }
 });
+
+
 
 module.exports = router;
