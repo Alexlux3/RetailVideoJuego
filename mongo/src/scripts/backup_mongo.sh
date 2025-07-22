@@ -1,24 +1,29 @@
 #!/bin/bash
-# Script para respaldar la base de datos de MongoDB.
+# Script para respaldar y subir MongoDB a la nube.
 
 # --- CONFIGURACIÓN ---
 DB_NAME="videojuegos_logs"
-# Crea una subcarpeta para los backups de Mongo
-BACKUP_DIR="/c/Users/Javier/ALMACENAJE/backup-retail" 
+BACKUP_DIR="/c/Users/Javier/ALMACENAJE/backup-retail/mongo" # Tu ruta local
 DATE=$(date +"%Y-%m-%d_%H%M%S")
-# mongodump guarda en un directorio, no en un solo archivo
-BACKUP_PATH="$BACKUP_DIR/$DB_NAME-$DATE"
+DUMP_PATH="$BACKUP_DIR/$DB_NAME-$DATE"
+ARCHIVE_NAME="$DB_NAME-$DATE.tar.gz"
+ARCHIVE_PATH="$BACKUP_DIR/$ARCHIVE_NAME"
+GCS_BUCKET="gs://backups-retail-videojuegos"
 
 # --- LÓGICA ---
 mkdir -p "$BACKUP_DIR"
-echo "Iniciando backup de MongoDB '$DB_NAME'..."
+echo "Iniciando backup de MongoDB..."
+mongodump --db=$DB_NAME --out="$DUMP_PATH"
+if [ $? -ne 0 ]; then echo "Error en mongodump."; exit 1; fi
 
-mongodump --db=$DB_NAME --out="$BACKUP_PATH"
+echo "Comprimiendo backup..."
+tar -czf "$ARCHIVE_PATH" -C "$BACKUP_DIR" "$DB_NAME-$DATE"
+if [ $? -ne 0 ]; then echo "Error al comprimir."; exit 1; fi
 
-if [ $? -eq 0 ]; then
-  echo "✅ Backup de MongoDB completado en: $BACKUP_PATH"
-  exit 0 # Éxito
-else
-  echo "❌ Error al crear el backup de MongoDB."
-  exit 1 # Fallo
-fi
+echo "Subiendo a Google Cloud Storage..."
+gcloud storage cp "$ARCHIVE_PATH" "$GCS_BUCKET/mongo/"
+if [ $? -ne 0 ]; then echo "Error al subir a la nube."; exit 1; fi
+
+rm -rf "$DUMP_PATH" # Limpieza
+echo "Backup de MongoDB completado y subido."
+exit 0

@@ -7,6 +7,7 @@ const userRoutes = require('./src/routes/user.routes');
 const productoRoutes = require('./src/routes/product.routes'); // Importa las rutas de productos
 const reportRoutes = require('./src/routes/report.routes');
 const internalLogRoutes = require('./src/routes/internalLog.routes');
+const internalBackupRoutes = require('./src/routes/internalBackup.routes');
 
 const app = express();
 const PORT = 5000; // Puerto donde corre Estudiante 2 (puede cambiar)
@@ -17,7 +18,7 @@ app.use('/api/ventas', saleRoutes);
 app.use('/api/logs', logRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/productos', productoRoutes);
-
+app.use('/internal/backup', internalBackupRoutes);
 app.use('/api/reportes', reportRoutes);
 
 async function startServer() {
