@@ -65,3 +65,35 @@ span { margin-right: 15px; }
 #user-list-container th, #user-list-container td { padding: 10px; border: 1px solid var(--color-borde); text-align: left; }
 .delete-user-btn { background-color: #ff4444; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; }
 .delete-user-btn:hover { background-color: #cc0000; }
+
+/* --- NUEVOS ESTILOS PARA LA LISTA DE PRODUCTOS DEL PROVEEDOR EN ADMIN --- */
+
+#product-list-for-purchase {
+    border: 1px solid var(--color-borde);
+    border-radius: 5px;
+    max-height: 200px; /* Altura máxima para que no ocupe toda la pantalla */
+    overflow-y: auto; /* Agrega una barra de scroll si hay muchos productos */
+    padding: 5px;
+    background-color: var(--color-fondo);
+}
+
+.product-list-item {
+    padding: 10px 15px;
+    border-bottom: 1px solid var(--color-borde);
+    cursor: pointer; /* Cambia el cursor a una manita para indicar que es clickeable */
+    transition: background-color 0.2s ease;
+}
+
+.product-list-item:last-child {
+    border-bottom: none; /* Elimina la última línea divisoria */
+}
+
+.product-list-item:hover {
+    background-color: #3a3f44; /* Color de fondo al pasar el mouse por encima */
+}
+
+.product-list-item.selected {
+    background-color: var(--color-primario); /* Color de fondo para el item seleccionado */
+    color: white;
+    font-weight: bold;
+}
