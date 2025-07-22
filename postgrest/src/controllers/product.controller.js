@@ -1,4 +1,5 @@
 const pool = require("../config/database");
+const { sendLog } = require("../services/apiLogger.service");
 
 /**
 
@@ -16,15 +17,15 @@ const getAllProducts = async (req, res) => {
 
     let query = `
 
-            SELECT p.*, plat.nombre as plataforma_nombre, cat.nombre as categoria_nombre
+            SELECT p.*, plat.nombre as plataforma_nombre, cat.nombre as categoria_nombre
 
-            FROM productos p
+            FROM productos p
 
-            LEFT JOIN plataformas plat ON p.id_plataforma = plat.id_plataforma
+            LEFT JOIN plataformas plat ON p.id_plataforma = plat.id_plataforma
 
-            LEFT JOIN categorias cat ON p.id_categoria = cat.id_categoria
+            LEFT JOIN categorias cat ON p.id_categoria = cat.id_categoria
 
-            WHERE p.activo = true`;
+            WHERE p.activo = true`;
 
     const params = [];
 
@@ -75,15 +76,15 @@ const getProductById = async (req, res) => {
   try {
     const query = `
 
-            SELECT p.*, plat.nombre AS plataforma_nombre, cat.nombre AS categoria_nombre
+        SELECT p.*, plat.nombre AS plataforma_nombre, cat.nombre AS categoria_nombre
 
-            FROM productos p
+        FROM productos p
 
-            LEFT JOIN plataformas plat ON p.id_plataforma = plat.id_plataforma
+        LEFT JOIN plataformas plat ON p.id_plataforma = plat.id_plataforma
 
-            LEFT JOIN categorias cat ON p.id_categoria = cat.id_categoria
+        LEFT JOIN categorias cat ON p.id_categoria = cat.id_categoria
 
-            WHERE p.id_producto = $1 AND p.activo = true`;
+        WHERE p.id_producto = $1 AND p.activo = true`;
 
     const result = await pool.query(query, [id]);
 
@@ -106,31 +107,49 @@ const getProductById = async (req, res) => {
  */
 
 const createProduct = async (req, res) => {
-    const { titulo, descripcion, id_categoria, id_plataforma, precio_compra, precio_venta } = req.body;
-    const adminUserId = req.user.id; // ID del admin que realiza la acción
+  const {
+    titulo,
+    descripcion,
+    id_categoria,
+    id_plataforma,
+    precio_compra,
+    precio_venta,
+  } = req.body;
+  const adminUserId = req.user.id; // ID del admin que realiza la acción
 
-    try {
-        const result = await pool.query(
-            `INSERT INTO productos (titulo, descripcion, id_categoria, id_plataforma, precio_compra, precio_venta) 
+  try {
+    const result = await pool.query(
+      `INSERT INTO productos (titulo, descripcion, id_categoria, id_plataforma, precio_compra, precio_venta) 
              VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
-            [titulo, descripcion, id_categoria, id_plataforma, precio_compra, precio_venta]
-        );
-        const newProduct = result.rows[0];
+      [
+        titulo,
+        descripcion,
+        id_categoria,
+        id_plataforma,
+        precio_compra,
+        precio_venta,
+      ]
+    );
+    const newProduct = result.rows[0];
 
-        // --- HOOK DE LOGGING ---
-        sendLog({
-            nivel: 'info',
-            modulo: 'productos',
-            accion: 'crear',
-            usuario_id: adminUserId,
-            mensaje: `Admin (ID: ${adminUserId}) creó el producto: ${newProduct.titulo} (ID: ${newProduct.id_producto})`,
-            datos_nuevos: newProduct
-        });
+    // --- HOOK DE LOGGING ---
+    sendLog({
+      nivel: "info",
+      modulo: "productos",
+      accion: "crear",
+      usuario_id: adminUserId,
+      mensaje: `Admin (ID: ${adminUserId}) creó el producto: ${newProduct.titulo} (ID: ${newProduct.id_producto})`,
+      datos_nuevos: newProduct,
+    });
 
-        res.status(201).json({ message: 'Producto creado exitosamente', producto: newProduct });
-    } catch (error) {
-        res.status(500).json({ message: 'Error al crear el producto', error: error.message });
-    }
+    res
+      .status(201)
+      .json({ message: "Producto creado exitosamente", producto: newProduct });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Error al crear el producto", error: error.message });
+  }
 };
 
 /**
@@ -140,34 +159,44 @@ const createProduct = async (req, res) => {
  */
 
 const updateProduct = async (req, res) => {
-    const { id } = req.params;
-    const updates = req.body;
-    const adminUserId = req.user.id;
+  const { id } = req.params;
+  const updates = req.body;
+  const adminUserId = req.user.id;
 
-    try {
-        const productBeforeResult = await pool.query('SELECT * FROM productos WHERE id_producto = $1', [id]);
-        if (productBeforeResult.rows.length === 0) return res.status(404).json({ message: 'Producto no encontrado' });
-        
-        const result = await pool.query(
-            'UPDATE productos SET titulo = $1, descripcion = $2, precio_venta = $3 WHERE id_producto = $4 RETURNING *',
-            [updates.titulo, updates.descripcion, updates.precio_venta, id]
-        );
-        
-        // --- HOOK DE LOGGING ---
-        sendLog({
-            nivel: 'info',
-            modulo: 'productos',
-            accion: 'actualizar',
-            usuario_id: adminUserId,
-            mensaje: `Admin (ID: ${adminUserId}) actualizó el producto ID: ${id}`,
-            datos_anteriores: productBeforeResult.rows[0],
-            datos_nuevos: updates
-        });
+  try {
+    const productBeforeResult = await pool.query(
+      "SELECT * FROM productos WHERE id_producto = $1",
+      [id]
+    );
+    if (productBeforeResult.rows.length === 0)
+      return res.status(404).json({ message: "Producto no encontrado" });
 
-        res.status(200).json({ message: 'Producto actualizado exitosamente', producto: result.rows[0] });
-    } catch (error) {
-        res.status(500).json({ message: 'Error al actualizar el producto', error: error.message });
-    }
+    const result = await pool.query(
+      "UPDATE productos SET titulo = $1, descripcion = $2, precio_venta = $3 WHERE id_producto = $4 RETURNING *",
+      [updates.titulo, updates.descripcion, updates.precio_venta, id]
+    );
+
+    // --- HOOK DE LOGGING ---
+    sendLog({
+      nivel: "info",
+      modulo: "productos",
+      accion: "actualizar",
+      usuario_id: adminUserId,
+      mensaje: `Admin (ID: ${adminUserId}) actualizó el producto ID: ${id}`,
+      datos_anteriores: productBeforeResult.rows[0],
+      datos_nuevos: updates,
+    });
+
+    res.status(200).json({
+      message: "Producto actualizado exitosamente",
+      producto: result.rows[0],
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Error al actualizar el producto",
+      error: error.message,
+    });
+  }
 };
 
 /**
@@ -177,27 +206,39 @@ const updateProduct = async (req, res) => {
  */
 
 const deleteProduct = async (req, res) => {
-    const { id } = req.params;
-    const adminUserId = req.user.id;
-    try {
-        const productBeforeResult = await pool.query('SELECT titulo FROM productos WHERE id_producto = $1', [id]);
-        if (productBeforeResult.rows.length === 0) return res.status(404).json({ message: 'Producto no encontrado' });
-        
-        await pool.query('UPDATE productos SET activo = false WHERE id_producto = $1', [id]);
+  const { id } = req.params;
+  const adminUserId = req.user.id;
+  try {
+    const productBeforeResult = await pool.query(
+      "SELECT titulo FROM productos WHERE id_producto = $1",
+      [id]
+    );
+    if (productBeforeResult.rows.length === 0)
+      return res.status(404).json({ message: "Producto no encontrado" });
 
-        // --- HOOK DE LOGGING ---
-        sendLog({
-            nivel: 'warn',
-            modulo: 'productos',
-            accion: 'desactivar',
-            usuario_id: adminUserId,
-            mensaje: `Admin (ID: ${adminUserId}) desactivó el producto: ${productBeforeResult.rows[0].titulo} (ID: ${id})`
-        });
+    await pool.query(
+      "UPDATE productos SET activo = false WHERE id_producto = $1",
+      [id]
+    );
 
-        res.status(200).json({ message: `Producto con ID ${id} ha sido desactivado.` });
-    } catch (error) {
-        res.status(500).json({ message: 'Error al desactivar el producto', error: error.message });
-    }
+    // --- HOOK DE LOGGING ---
+    sendLog({
+      nivel: "warn",
+      modulo: "productos",
+      accion: "desactivar",
+      usuario_id: adminUserId,
+      mensaje: `Admin (ID: ${adminUserId}) desactivó el producto: ${productBeforeResult.rows[0].titulo} (ID: ${id})`,
+    });
+
+    res
+      .status(200)
+      .json({ message: `Producto con ID ${id} ha sido desactivado.` });
+  } catch (error) {
+    res.status(500).json({
+      message: "Error al desactivar el producto",
+      error: error.message,
+    });
+  }
 };
 
 module.exports = {

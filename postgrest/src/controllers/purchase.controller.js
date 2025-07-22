@@ -1,4 +1,5 @@
 const pool = require('../config/database');
+const { sendLog } = require('../services/apiLogger.service');
 
 const createPurchase = async (req, res) => {
     // Datos que un admin enviaría desde el panel de administración

@@ -37,3 +37,4 @@ app.use('/api/compras', purchaseRoutes);
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 Servidor corriendo en el puerto ${PORT} y accesible en la red.`);
 });
+
