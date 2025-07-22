@@ -215,6 +215,54 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+        // INICIO DEL CÓDIGO AÑADIDO PARA EL BACKUP
+    // =================================================================
+    backupBtn.addEventListener('click', async () => {
+        // 1. Obtiene la sesión guardada (usando tu método actual)
+        const sesion = JSON.parse(sessionStorage.getItem('sesion'));
+        if (!sesion || !sesion.token) {
+            return alert("Tu sesión ha expirado. Por favor, inicia sesión de nuevo como administrador.");
+        }
+
+        // 2. Pide confirmación al usuario
+        if (!confirm("¿Estás seguro de que quieres iniciar un backup completo del sistema? Esta operación no se puede cancelar.")) {
+            return;
+        }
+
+        // 3. Actualiza la interfaz para dar feedback al usuario
+        backupMensaje.textContent = "Iniciando proceso de backup, por favor espera...";
+        backupBtn.disabled = true;
+
+        try {
+            // Se usa la URL completa del backend del Estudiante 1
+            const response = await fetch(`http://${IP_ESTUDIANTE_1}:3000/api/admin/backup`, {
+                method: 'POST',
+                headers: {
+                    // Envía el token para que el backend sepa que es un admin autorizado
+                    'Authorization': `Bearer ${sesion.token}`
+                }
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || 'El servidor devolvió un error.');
+            }
+
+            // 5. Muestra un mensaje de éxito
+            backupMensaje.textContent = `Éxito: ${data.message}`;
+
+        } catch (error) {
+            // 6. Muestra un mensaje de error
+            backupMensaje.textContent = `Error: ${error.message}`;
+        } finally {
+            // 7. Vuelve a habilitar el botón después de un tiempo
+            setTimeout(() => {
+                backupBtn.disabled = false;
+            }, 5000);
+        }
+    });
+
     // --- Lógica de la Tienda ---
     async function cargarDatosIniciales() {
         try {
