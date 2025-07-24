@@ -10,7 +10,7 @@ const triggerBackup = (req, res) => {
     }
 
     // Construye la ruta al script de forma segura.
-    const scriptPath = path.join(__dirname, '..', '..', 'scripts', 'backup_mongo.sh');
+    const scriptPath = path.join(__dirname, '..',  'scripts', 'backup_mongo.sh');
 
     // Es una buena práctica ejecutar scripts .sh explícitamente con 'bash'
     // y encerrar la ruta entre comillas para manejar espacios en nombres de archivo.

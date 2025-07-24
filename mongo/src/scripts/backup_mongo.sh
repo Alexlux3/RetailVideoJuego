@@ -26,4 +26,4 @@ if [ $? -ne 0 ]; then echo "Error al subir a la nube."; exit 1; fi
 
 rm -rf "$DUMP_PATH" # Limpieza
 echo "Backup de MongoDB completado y subido."
-exit 0
+exit 0
